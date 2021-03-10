@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-public   class UserController {
+public class UserController {
 
     @Autowired
     UserMapper userMapper;
@@ -21,6 +21,18 @@ public   class UserController {
     public User selectWithName(@RequestParam String name) {
         List<User> ret = userMapper.selectUser(name);
         return ret.get(0);
+    }
+
+    @RequestMapping("/login")
+    public User login(@RequestParam String name, @RequestParam String pwd) {
+        List<User> res = userMapper.selectUser(name);
+        User ins = res.get(0);
+        if(ins.getPwd().equals(pwd)){
+            ins.setLoginResult("success");
+        }else{
+            ins.setLoginResult("failed");
+        }
+        return ins;
     }
 
     @RequestMapping("/delete")
@@ -37,7 +49,7 @@ public   class UserController {
 
     @RequestMapping("/update")
     public String updateUser(@RequestParam String field, @RequestParam String value, @RequestParam String name) {
-        userMapper.updateUser(field,value,name);
+        userMapper.updateUser(field, value, name);
         return "update success";
     }
 }
